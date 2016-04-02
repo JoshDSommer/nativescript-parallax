@@ -1,6 +1,8 @@
 #NativeScript Parallax Scroll Effect
 
-[![NativeScript Parallax Scroll Effect](https://img.youtube.com/vi/sR_Ku7dsm2c/0.jpg)](https://www.youtube.com/embed/sR_Ku7dsm2c)
+
+[![NativeScript Parallax Scroll Effect. Click to Play](https://img.youtube.com/vi/sR_Ku7dsm2c/0.jpg)](https://www.youtube.com/embed/sR_Ku7dsm2c)
+
 Prepare project and install dependencies
 
 `$ npm install`
