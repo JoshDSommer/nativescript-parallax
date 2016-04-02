@@ -1,0 +1,27 @@
+{
+	"nativescript": {
+		"id": "org.nativescript.parallax",
+		"authoer": "Josh Sommer",
+		"tns-ios": {
+			"version": "1.7.0"
+		},
+		"tns-android": {
+			"version": "1.7.1"
+		}
+	},
+	"dependencies": {
+		"nativescript-angular": "0.0.38",
+		"tns-core-modules": "1.7.1",
+		"angular2": "2.0.0-beta.9",
+		"es6-promise": "^3.0.2",
+		"es6-shim": "^0.33.3",
+		"reflect-metadata": "0.1.2",
+		"rxjs": "5.0.0-beta.2",
+		"zone.js": "0.5.15",
+		"nativescript-screen-orientation": "^1.0.2"
+	},
+	"devDependencies": {
+		"nativescript-dev-typescript": "^0.3.0",
+		"typescript": "^1.8.9"
+	}
+}
