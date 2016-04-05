@@ -1,27 +1,42 @@
 {
+	"name": "nativescript-parallax",
+	"version": "0.0.3",
+	"description": "NativeScript Parallax View Plugin.",
+	"main": "nativescript-parallax.js",
 	"nativescript": {
-		"id": "org.nativescript.parallax",
-		"authoer": "Josh Sommer",
-		"tns-ios": {
-			"version": "1.7.0"
-		},
-		"tns-android": {
-			"version": "1.7.1"
+		"platforms": {
+			"android": "1.7.0",
+			"ios": "1.7.0"
 		}
 	},
-	"dependencies": {
-		"nativescript-angular": "0.0.38",
-		"tns-core-modules": "1.7.1",
-		"angular2": "2.0.0-beta.9",
-		"es6-promise": "^3.0.2",
-		"es6-shim": "^0.33.3",
-		"reflect-metadata": "0.1.2",
-		"rxjs": "5.0.0-beta.2",
-		"zone.js": "0.5.15",
-		"nativescript-screen-orientation": "^1.0.2"
+	"scripts": {
+		"build": "tsc",
+		"demo.ios": "npm run preparedemo &&  cd demo &&  tns emulate ios",
+		"demo.android": "npm run preparedemo &&  cd demo &&  tns run android",
+		"preparedemo": "npm run build &&  cd demo &&  tns plugin remove nativescript-parallax &&  tns plugin add .. &&  tns install",
+		"setup": "cd demo &&  npm install &&  cd .. &&  npm run build &&  cd demo &&  tns plugin add .. &&  cd .."
 	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/TheOriginalJosh/nativescript-parallax.git"
+	},
+	"keywords": [
+		"NativeScript",
+		"JavaScript",
+		"Android",
+		"iOS"
+	],
+	"author": {
+		"name": "Your Name",
+		"email": "youremail@yourdomain.com"
+	},
+	"bugs": {
+		"url": "https://github.com/TheOriginalJosh/nativescript-parallax/issues"
+	},
+	"license": "MIT",
+	"homepage": "https://github.com/TheOriginalJosh/nativescript-parallax",
+	"readmeFilename": "README.md",
 	"devDependencies": {
-		"nativescript-dev-typescript": "^0.3.0",
-		"typescript": "^1.8.9"
+		"typescript": "^1.8.7"
 	}
 }
