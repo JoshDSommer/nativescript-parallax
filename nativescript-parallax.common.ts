@@ -15,7 +15,7 @@ export class ParallaxViewCommon extends _scrollViewModule.ScrollView {
 		let topView: _stackLayout.StackLayout;
 		let scrollView: _scrollViewModule.ScrollView;
 		let viewsToFade: _view.View[];
-		let topViewHeight: number;
+		let maxTopViewHeight: number;
 		let controlsToFade: string[];
 
 		viewsToFade = [];
@@ -24,12 +24,13 @@ export class ParallaxViewCommon extends _scrollViewModule.ScrollView {
 
 		scrollView.on(_scrollViewModule.ScrollView.loadedEvent, (data: _scrollViewModule.ScrollEventData) => {
 
-			if (topViewHeight == null) {
-				topViewHeight = 300; //default height if it is not set.
+			if (maxTopViewHeight == null) {
+				maxTopViewHeight = 300;
 			}
 			if (controlsToFade == null) {
 				controlsToFade = [];
 			}
+			//setting this to negative 10 assures there is no confusion when starting the on scroll event.
 			let prevOffset = -10;
 			let topOpacity = 1;
 
@@ -38,7 +39,7 @@ export class ParallaxViewCommon extends _scrollViewModule.ScrollView {
 			if (topView == null) {
 				return;
 			}
-			topView.height = topViewHeight;
+			topView.height = maxTopViewHeight;
 
 			//find each control specified to fade.
 			controlsToFade.forEach((id: string): void => {
@@ -51,16 +52,18 @@ export class ParallaxViewCommon extends _scrollViewModule.ScrollView {
 
 			scrollView.on(_scrollViewModule.ScrollView.scrollEvent, (args: _scrollViewModule.ScrollEventData) => {
 				if (prevOffset <= scrollView.verticalOffset) {
+					//when scrolling down
 					if (topView.height >= 0) {
-						topView.height = this.getTopViewHeight(topViewHeight, scrollView.verticalOffset);
+						topView.height = this.getTopViewHeight(maxTopViewHeight, scrollView.verticalOffset);
 					}
 				} else {
-					if (topView.height <= topViewHeight) {
-						topView.height = this.getTopViewHeight(topViewHeight, scrollView.verticalOffset);
+					//scrolling up, as long as the view's hieght is not taller than it's initial height;
+					if (topView.height <= maxTopViewHeight) {
+						topView.height = this.getTopViewHeight(maxTopViewHeight, scrollView.verticalOffset);
 					}
 				}
 				//fades in and out label in topView
-				if (scrollView.verticalOffset < topViewHeight) {
+				if (scrollView.verticalOffset < maxTopViewHeight) {
 					topOpacity = parseFloat((1 - (scrollView.verticalOffset * 0.01)).toString());
 					if (topOpacity > 0 && topOpacity <= 1) {
 						//fade each control
@@ -81,10 +84,10 @@ export class ParallaxViewCommon extends _scrollViewModule.ScrollView {
 	get ios(): any {
 		return;
 	}
-
-	getTopViewHeight(topHeight: number, offset: number): number {
-		if ((topHeight - offset) >= 0) {
-			return topHeight - offset;
+	//calcutes the top views height  using the scrollview's verticalOffset
+	getTopViewHeight(topHeight: number, verticalOffset: number): number {
+		if ((topHeight - verticalOffset) >= 0) {
+			return topHeight - verticalOffset;
 		} else {
 			return 0;
 		}
