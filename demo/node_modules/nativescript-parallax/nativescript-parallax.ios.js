@@ -11,6 +11,6 @@ var ParallaxView = (function (_super) {
         _super.apply(this, arguments);
     }
     return ParallaxView;
-}(nativescript_parallax_common_1.Common));
+}(nativescript_parallax_common_1.ParallaxViewCommon));
 exports.ParallaxView = ParallaxView;
 //# sourceMappingURL=nativescript-parallax.ios.js.map

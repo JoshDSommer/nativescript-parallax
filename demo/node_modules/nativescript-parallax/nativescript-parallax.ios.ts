@@ -1,5 +1,5 @@
-import {Common} from './nativescript-parallax.common';
+import {ParallaxViewCommon} from './nativescript-parallax.common';
 
-export class ParallaxView extends Common {
+export class ParallaxView extends ParallaxViewCommon {
 
 }
