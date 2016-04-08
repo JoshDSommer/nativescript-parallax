@@ -3,11 +3,11 @@
 	loaded="pageLoaded">
   <StackLayout>
   	<parallax:ParallaxView>
-		<StackLayout id="topView" class="header-template">
+		<StackLayout class="header-template">
 				<Label id="headerLabel" text="Parallax"></Label>
 				<Label id="headerLabel2" text="Component"></Label>
 			</StackLayout>
-			<StackLayout  id="bottomView" class="body-template">
+			<StackLayout class="body-template">
 				<Label id="titleLabel" text="Angular 2 Parallax Template"></Label>
 				<TextView editable="false" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque, est in viverra vehicula, enim lacus fermentum mi, vel tincidunt libero diam quis nulla. In sem tellus, eleifend quis egestas at, ultricies a neque. Cras facilisis lacinia velit ut lacinia. Phasellus fermentum libero et est ultricies venenatis sit amet ac lectus. Curabitur faucibus nisi id tellus vehicula luctus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nunc condimentum est id nibh volutpat tempor. Phasellus sodales velit vel dui feugiat, eget tincidunt tortor sollicitudin. Donec nec risus in purus interdum eleifend. Praesent placerat urna aliquet orci suscipit laoreet. In ac purus nec sapien rhoncus egestas.
 
