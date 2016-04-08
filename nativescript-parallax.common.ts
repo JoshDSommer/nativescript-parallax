@@ -5,19 +5,29 @@ import * as _frame from 'ui/frame';
 import * as _pages from 'ui/page';
 import * as _stackLayout from 'ui/layouts/stack-layout';
 
-
-export class ParallaxViewCommon extends _scrollViewModule.ScrollView {
+export class ParallaxViewCommon extends _scrollViewModule.ScrollView implements _view.AddChildFromBuilder {
 
 
 	constructor() {
 		super();
-
-		let topView: _stackLayout.StackLayout;
+		let headerView: _view.View;
 		let scrollView: _scrollViewModule.ScrollView;
 		let viewsToFade: _view.View[];
 		let maxTopViewHeight: number;
 		let controlsToFade: string[];
 
+		//creates a new stack layout to wrap the content inside of the plugin.
+		let wrapperStackLayout = new _stackLayout.StackLayout();
+		//overides default addChildFromBuilder to insert the wrapper and then add any child views.
+		this._addChildFromBuilder = (name: string, value: any) => {
+			if (value instanceof _view.View) {
+				if (this.content == null) {
+					this.content = wrapperStackLayout;
+				}
+				wrapperStackLayout.addChild(value);
+			}
+		};
+		//not supported yet;
 		viewsToFade = [];
 
 		scrollView = <_scrollViewModule.ScrollView>this;
@@ -34,12 +44,13 @@ export class ParallaxViewCommon extends _scrollViewModule.ScrollView {
 			let prevOffset = -10;
 			let topOpacity = 1;
 
-			topView = <_stackLayout.StackLayout>_view.getViewById(this, 'topView');
+			//first child always needs to be the headerView
+			headerView = wrapperStackLayout.getChildAt(0);
 
-			if (topView == null) {
+			if (headerView == null) {
 				return;
 			}
-			topView.height = maxTopViewHeight;
+			headerView.height = maxTopViewHeight;
 
 			//find each control specified to fade.
 			controlsToFade.forEach((id: string): void => {
@@ -53,13 +64,13 @@ export class ParallaxViewCommon extends _scrollViewModule.ScrollView {
 			scrollView.on(_scrollViewModule.ScrollView.scrollEvent, (args: _scrollViewModule.ScrollEventData) => {
 				if (prevOffset <= scrollView.verticalOffset) {
 					//when scrolling down
-					if (topView.height >= 0) {
-						topView.height = this.getTopViewHeight(maxTopViewHeight, scrollView.verticalOffset);
+					if (headerView.height >= 0) {
+						headerView.height = this.getTopViewHeight(maxTopViewHeight, scrollView.verticalOffset);
 					}
 				} else {
 					//scrolling up, as long as the view's hieght is not taller than it's initial height;
-					if (topView.height <= maxTopViewHeight) {
-						topView.height = this.getTopViewHeight(maxTopViewHeight, scrollView.verticalOffset);
+					if (headerView.height <= maxTopViewHeight) {
+						headerView.height = this.getTopViewHeight(maxTopViewHeight, scrollView.verticalOffset);
 					}
 				}
 				//fades in and out label in topView
