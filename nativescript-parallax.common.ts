@@ -4,17 +4,18 @@ import * as _view from 'ui/core/view';
 import * as _frame from 'ui/frame';
 import * as _pages from 'ui/page';
 import * as _stackLayout from 'ui/layouts/stack-layout';
-import {PropertyMetadata} from "ui/core/proxy";
-import {Property, PropertyMetadataSettings} from "ui/core/dependency-observable";
-
-
-let controlsToFadeProperty = new Property(
-	"controls-to-fade",
-	"ParallaxView",
-	new PropertyMetadata(undefined, PropertyMetadataSettings.None)
-);
 
 export class ParallaxViewCommon extends _scrollViewModule.ScrollView implements _view.AddChildFromBuilder {
+	private _controlsToFade: string;
+
+
+	get controlsToFade(): string {
+		return this._controlsToFade;
+	}
+
+	set controlsToFade(value: string) {
+		this._controlsToFade = value;
+	}
 
 	constructor() {
 		super();
@@ -22,7 +23,7 @@ export class ParallaxViewCommon extends _scrollViewModule.ScrollView implements 
 		let scrollView: _scrollViewModule.ScrollView;
 		let viewsToFade: _view.View[];
 		let maxTopViewHeight: number;
-		let controlsToFade: string[] = controlsToFadeProperty.toString().split(',');
+		let controlsToFade: string[];
 
 		//creates a new stack layout to wrap the content inside of the plugin.
 		let wrapperStackLayout = new _stackLayout.StackLayout();
@@ -45,9 +46,13 @@ export class ParallaxViewCommon extends _scrollViewModule.ScrollView implements 
 			if (maxTopViewHeight == null) {
 				maxTopViewHeight = 300;
 			}
-			if (controlsToFade == null) {
+			if (controlsToFade == null && this.controlsToFade == null) {
 				controlsToFade = [];
+			} else {
+				controlsToFade = this.controlsToFade.split(',');
+
 			}
+
 			//setting this to negative 10 assures there is no confusion when starting the on scroll event.
 			let prevOffset = -10;
 			let topOpacity = 1;

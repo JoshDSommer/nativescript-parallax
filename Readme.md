@@ -3,7 +3,6 @@
 
 
 [![NativeScript Parallax Scroll Effect. Click to Play](https://img.youtube.com/vi/sR_Ku7dsm2c/0.jpg)](https://www.youtube.com/embed/sR_Ku7dsm2c)
->Please note fading in and fading out controls as in the above video is not yet completed
 
 ###Install
 `$ tns plugin add nativescript-parallax`
@@ -15,7 +14,7 @@
 	 xmlns:parallax="nativescript-parallax"
 	loaded="pageLoaded">
   <StackLayout>
-  	<parallax:ParallaxView>
+  	<parallax:ParallaxView controlsToFade="headerLabel,headerLabel2">
 		<StackLayout class="header-template">
 			<Label id="headerLabel" text="Parallax"></Label>
 			<Label id="headerLabel2" text="Component"></Label>
@@ -67,6 +66,8 @@
 To use the paralax plugin you need to first import it into your xml layou with  `xmlns:parallax="nativescript-parallax"`
 
 when using the parallax plugin you need at least two layout views inside of the ``<parallax:ParallaxView>`` element. The first layout view being your header, which is seen in the above example with the background image.
+
+To add views such as labels you want to fade out in the ``<parallax:Parallaxiew>`` add ``controlsToFade`` and pass it a comma delimited string with each control ID you want to fade out. In the above example it looks like ``controlsToFade="headerLabel,headerLabel2"`` and will fade out both of those labels.
 
 ###Special thanks to:
  [Nathanael Anderson](https://github.com/NathanaelA) for helping with understand how plugins in {N} work.

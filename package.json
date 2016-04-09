@@ -1,6 +1,6 @@
 {
 	"name": "nativescript-parallax",
-	"version": "0.0.7",
+	"version": "0.1.0",
 	"description": "NativeScript Parallax View Plugin.",
 	"main": "nativescript-parallax.js",
 	"nativescript": {
