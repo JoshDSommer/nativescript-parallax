@@ -4,9 +4,17 @@ import * as _view from 'ui/core/view';
 import * as _frame from 'ui/frame';
 import * as _pages from 'ui/page';
 import * as _stackLayout from 'ui/layouts/stack-layout';
+import {PropertyMetadata} from "ui/core/proxy";
+import {Property, PropertyMetadataSettings} from "ui/core/dependency-observable";
+
+
+let controlsToFadeProperty = new Property(
+	"controls-to-fade",
+	"ParallaxView",
+	new PropertyMetadata(undefined, PropertyMetadataSettings.None)
+);
 
 export class ParallaxViewCommon extends _scrollViewModule.ScrollView implements _view.AddChildFromBuilder {
-
 
 	constructor() {
 		super();
@@ -14,7 +22,7 @@ export class ParallaxViewCommon extends _scrollViewModule.ScrollView implements 
 		let scrollView: _scrollViewModule.ScrollView;
 		let viewsToFade: _view.View[];
 		let maxTopViewHeight: number;
-		let controlsToFade: string[];
+		let controlsToFade: string[] = controlsToFadeProperty.toString().split(',');
 
 		//creates a new stack layout to wrap the content inside of the plugin.
 		let wrapperStackLayout = new _stackLayout.StackLayout();
@@ -47,19 +55,18 @@ export class ParallaxViewCommon extends _scrollViewModule.ScrollView implements 
 			//first child always needs to be the headerView
 			headerView = wrapperStackLayout.getChildAt(0);
 
-			if (headerView == null) {
-				return;
-			}
-			headerView.height = maxTopViewHeight;
-
-			//find each control specified to fade.
 			controlsToFade.forEach((id: string): void => {
-				let newView: _view.View = _view.getViewById(this, id);
+				let newView: _view.View = wrapperStackLayout.getViewById(id);
 				if (newView != null) {
 					viewsToFade.push(newView);
 				}
 			});
 
+			if (headerView == null) {
+				return;
+			}
+
+			headerView.height = maxTopViewHeight;
 
 			scrollView.on(_scrollViewModule.ScrollView.scrollEvent, (args: _scrollViewModule.ScrollEventData) => {
 				if (prevOffset <= scrollView.verticalOffset) {

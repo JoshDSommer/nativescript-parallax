@@ -2,7 +2,7 @@
 	 xmlns:parallax="nativescript-parallax"
 	loaded="pageLoaded">
   <StackLayout>
-  	<parallax:ParallaxView>
+  	<parallax:ParallaxView controls-to-fade="headerLabel,headerLabel2">
 		<StackLayout class="header-template">
 				<Label id="headerLabel" text="Parallax"></Label>
 				<Label id="headerLabel2" text="Component"></Label>
