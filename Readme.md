@@ -1,6 +1,5 @@
-#NativeScript Parallax Plugin.
+#NativeScript Parallax View Plugin.
 
-#NativeScript Angular2 parallax view component
 
 
 [![NativeScript Parallax Scroll Effect. Click to Play](https://img.youtube.com/vi/sR_Ku7dsm2c/0.jpg)](https://www.youtube.com/embed/sR_Ku7dsm2c)
