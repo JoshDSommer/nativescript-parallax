@@ -1,8 +1,0 @@
-<Page xmlns="http://schemas.nativescript.org/tns.xsd"
-	 xmlns:parallax="nativescript-parallax"
-	loaded="pageLoaded">
-  <StackLayout>
-  	<parallax:ParallaxView></parallax:ParallaxView>
-    <Label text="{{ message }}" class="message" textWrap="true"/>
-  </StackLayout>
-</Page>
