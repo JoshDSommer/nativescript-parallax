@@ -42,15 +42,11 @@ export class ParallaxViewCommon extends _scrollViewModule.ScrollView implements 
 		scrollView = <_scrollViewModule.ScrollView>this;
 
 		scrollView.on(_scrollViewModule.ScrollView.loadedEvent, (data: _scrollViewModule.ScrollEventData) => {
-
-			if (maxTopViewHeight == null) {
-				maxTopViewHeight = 300;
-			}
+			//sets up controls to fade in and out.
 			if (controlsToFade == null && this.controlsToFade == null) {
 				controlsToFade = [];
 			} else {
 				controlsToFade = this.controlsToFade.split(',');
-
 			}
 
 			//setting this to negative 10 assures there is no confusion when starting the on scroll event.
@@ -59,6 +55,8 @@ export class ParallaxViewCommon extends _scrollViewModule.ScrollView implements 
 
 			//first child always needs to be the headerView
 			headerView = wrapperStackLayout.getChildAt(0);
+
+			maxTopViewHeight = headerView.height;
 
 			controlsToFade.forEach((id: string): void => {
 				let newView: _view.View = wrapperStackLayout.getViewById(id);
@@ -85,6 +83,7 @@ export class ParallaxViewCommon extends _scrollViewModule.ScrollView implements 
 						headerView.height = this.getTopViewHeight(maxTopViewHeight, scrollView.verticalOffset);
 					}
 				}
+
 				//fades in and out label in topView
 				if (scrollView.verticalOffset < maxTopViewHeight) {
 					topOpacity = parseFloat((1 - (scrollView.verticalOffset * 0.01)).toString());

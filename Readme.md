@@ -63,7 +63,7 @@
 
 }
 ```
-To use the paralax plugin you need to first import it into your xml layou with  `xmlns:parallax="nativescript-parallax"`
+To use the parallax plugin you need to first import it into your xml layout with  `xmlns:parallax="nativescript-parallax"`
 
 when using the parallax plugin you need at least two layout views inside of the ``<parallax:ParallaxView>`` element. The first layout view being your header, which is seen in the above example with the background image.
 

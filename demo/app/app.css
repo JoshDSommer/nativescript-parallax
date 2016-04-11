@@ -14,7 +14,8 @@
 .header-template{
 	background-color:#212121;
 	background-image:url('~/images/mountains.png');
-	background-size:400 320;
+	background-size:400 200;
+	height: 200;
 }
 .body-template textview{
 	font-size:20;
