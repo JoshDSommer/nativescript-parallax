@@ -14,17 +14,23 @@
 .header-template{
 	background-color:#212121;
 	background-image:url('~/images/mountains.png');
-	background-size:400 200;
+	background-size: cover;
 	height: 200;
 }
-.body-template textview{
+.body-template TextView{
 	font-size:20;
 	padding:5 15;
 	border:none;
 }
+.anchor{
+	height: 55;
+	width:100%;
+	background-color:#616161;
+}
 #titleLabel{
 	font-weight:bold;
-	font-size:30;
+	font-size:25;
 	padding:5 15;
+	color:#fff;
 
 }
