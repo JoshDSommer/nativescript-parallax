@@ -80,6 +80,15 @@ To add views such as labels you want to fade out in the ``<parallax:Parallaxiew>
 
 If the inner content of ``<parallax:Content>`` isn't long enough to cause the page to scroll. If not it will not show the Parallax effect.
 
+###Work Flow.
+
+* Clone repository to your machine.
+* First run `npm install`
+* Then run `npm run setup` to prepare the demo project
+* Build with `npm run build`
+* Run and deploy to your device or emulator with `npm run demo.android` or `npm run demo.ios`
+
+
 ###Special thanks to:
  [Nathanael Anderson](https://github.com/NathanaelA) for helping with understand how plugins in {N} work.
  Also Thanks to [Nathan Walker](https://github.com/NathanWalker) for setting up the {N} plugin seed that I used to help get this plugin up and running. More info can be found about it here:
