@@ -78,6 +78,8 @@ when using the parallax plugin you need at least two layout views inside of the 
 
 To add views such as labels you want to fade out in the ``<parallax:Parallaxiew>`` add ``controlsToFade`` and pass it a comma delimited string with each control ID you want to fade out. In the above example it looks like ``controlsToFade="headerLabel,headerLabel2"`` and will fade out both of those labels.
 
+If the inner content of ``<parallax:Content>`` isn't long enough to cause the page to scroll. If not it will not show the Parallax effect.
+
 ###Special thanks to:
  [Nathanael Anderson](https://github.com/NathanaelA) for helping with understand how plugins in {N} work.
  Also Thanks to [Nathan Walker](https://github.com/NathanWalker) for setting up the {N} plugin seed that I used to help get this plugin up and running. More info can be found about it here:
