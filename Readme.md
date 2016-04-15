@@ -82,7 +82,7 @@ The ``<parallax:Anchored>`` has a property called `dropShadow` if set to true it
 
 If the inner content of ``<parallax:Content>`` isn't long enough to cause the page to scroll. If not it will not show the Parallax effect.
 
-###Work Flow.
+###Plugin Development Work Flow.
 
 * Clone repository to your machine.
 * First run `npm install`
