@@ -6,7 +6,7 @@
 			<Label id="headerLabel" text="Parallax"></Label>
 			<Label id="headerLabel2" text="Component"></Label>
 		</parallax:Header>
-		<parallax:Anchored class="anchor">
+		<parallax:Anchored class="anchor" dropShadow="true">
 			<Label id="titleLabel" text="Parallax Template"></Label>
 		</parallax:Anchored>
 		<parallax:Content class="body-template">

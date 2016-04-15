@@ -76,7 +76,9 @@ To use the parallax plugin you need to first import it into your xml layout with
 when using the parallax plugin you need at least two layout views inside of the ``<parallax:ParallaxView>`` element. ``<parallax:Header>`` and ``<parallax:Content>``. there is an optional third view called
 ``<parallax:Anchored>`` which will positions it's self below the Header and once it reaches the top of the screen anchor it's self there.
 
-To add views such as labels you want to fade out in the ``<parallax:Parallaxiew>`` add ``controlsToFade`` and pass it a comma delimited string with each control ID you want to fade out. In the above example it looks like ``controlsToFade="headerLabel,headerLabel2"`` and will fade out both of those labels.
+To add views such as labels you want to fade out in the ``<parallax:Parallaxiew>`` add the ``controlsToFade`` attribute and pass it a comma delimited string with each control ID you want to fade out. In the above example it looks like ``controlsToFade="headerLabel,headerLabel2"`` and will fade out both of those labels.
+
+The ``<parallax:Anchored>`` has a property called `dropShadow` if set to true it will create a small drop shadow effect on the bottom of the anchor.
 
 If the inner content of ``<parallax:Content>`` isn't long enough to cause the page to scroll. If not it will not show the Parallax effect.
 

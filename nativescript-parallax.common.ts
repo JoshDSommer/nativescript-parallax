@@ -13,7 +13,18 @@ export class Header extends _stackLayout.StackLayout {
 
 }
 export class Anchored extends _stackLayout.StackLayout {
+	private _dropShadow: boolean;
+	get dropShadow(): boolean {
+		return this._dropShadow;
+	}
+	set dropShadow(value: boolean) {
+		this._dropShadow = value;
+	}
 
+	constructor() {
+		super();
+		this.dropShadow = false;
+	}
 }
 
 export class Content extends _stackLayout.StackLayout {
@@ -33,6 +44,14 @@ export class ParallaxViewCommon extends _gridLayout.GridLayout implements _view.
 
 	set controlsToFade(value: string) {
 		this._controlsToFade = value;
+	}
+
+	get android(): any {
+		return;
+	}
+
+	get ios(): any {
+		return;
 	}
 
 	constructor() {
@@ -60,7 +79,7 @@ export class ParallaxViewCommon extends _gridLayout.GridLayout implements _view.
 		this._loaded = false;
 
 		this.on(_gridLayout.GridLayout.loadedEvent, (data: any) => {
-
+			//prevents re adding views on resume in android.
 			if (!this._loaded) {
 				this._loaded = true;
 
@@ -93,26 +112,33 @@ export class ParallaxViewCommon extends _gridLayout.GridLayout implements _view.
 				this._childLayouts.forEach(element => {
 					if (element instanceof Anchored) {
 						anchoredRow.addChild(element);
-						anchoredRow.height = element.height;
+						if ((<Anchored>element).dropShadow) {
+							anchoredRow.height = element.height;
+							anchoredRow.addChild(this.addDropShadow(element.height, element.width));
+						} else {
+							anchoredRow.height = element.height;
+						}
+						element.verticalAlignment = 'top';
 						this._includesAnchored = true;
 					}
 				});
+
 				if (headerView == null || contentView == null) {
-					let warningText = new _label.Label();
-					warningText.text = "Parallax ScrollView Setup Invalid. You must have Header and Content tags";
-					warningText.color = new _color.Color('red');
-					warningText.textWrap = true;
-					warningText.marginTop = 50;
-					this.addChild(warningText);
-
-					if (headerView != null) {
-						headerView.visibility = 'collapse';
-					}
-					if (contentView != null) {
-						contentView.visibility = 'collapse';
-
-						return;
-					}
+					this.displayDevWarning('Parallax ScrollView Setup Invalid. You must have Header and Content tags',
+						headerView,
+						contentView, contentView);
+					return;
+				}
+				if (isNaN(headerView.height)) {
+					this.displayDevWarning('Header MUST have a height set.',
+						headerView,
+						anchoredRow, contentView);
+					return;
+				}
+				if (this._includesAnchored && isNaN(anchoredRow.height)) {
+					this.displayDevWarning('Anchor MUST have a height set.',
+						anchoredRow, headerView, contentView);
+					return;
 				}
 				maxTopViewHeight = headerView.height;
 
@@ -126,9 +152,8 @@ export class ParallaxViewCommon extends _gridLayout.GridLayout implements _view.
 				}
 
 				viewsToFade = [];
-
 				//scrollView = <_scrollViewModule.ScrollView>this;
-				if (controlsToFade == null && this.controlsToFade == null) {
+				if (this.controlsToFade == null) {
 					controlsToFade = [];
 				} else {
 					controlsToFade = this.controlsToFade.split(',');
@@ -149,30 +174,24 @@ export class ParallaxViewCommon extends _gridLayout.GridLayout implements _view.
 
 				headerView.height = maxTopViewHeight;
 
-				scrollView.on(_scrollViewModule.ScrollView.loadedEvent, (data: _scrollViewModule.ScrollEventData) => {
-					//sets up controls to fade in and out.
-
-				});
 				let prevOffset = -10;
 
 				scrollView.on(_scrollViewModule.ScrollView.scrollEvent, (args: _scrollViewModule.ScrollEventData) => {
-					if (prevOffset <= scrollView.verticalOffset) {
-						//when scrolling down
-						if (headerView.height >= 0) {
-							headerView.height = this.getTopViewHeight(maxTopViewHeight, scrollView.verticalOffset);
-						}
-					} else {
-						//scrolling up, as long as the view's hieght is not taller than it's initial height;
-						if (headerView.height <= maxTopViewHeight) {
-							headerView.height = this.getTopViewHeight(maxTopViewHeight, scrollView.verticalOffset);
-						}
-					}
 					if (this._includesAnchored) {
 						anchoredRow.marginTop = this.getAnchoredTopHeight(maxTopViewHeight, scrollView.verticalOffset);
 					}
+
+					headerView.height = this.getTopViewHeight(maxTopViewHeight, scrollView.verticalOffset);
+
 					//fades in and out label in topView
 					this.fadeViews(maxTopViewHeight, scrollView.verticalOffset, viewsToFade);
 
+					//leaving in the up/down detection as it may be handy in the future.
+					if (prevOffset <= scrollView.verticalOffset) {
+						//when scrolling down
+					} else {
+						//scrolling up,
+					}
 					prevOffset = scrollView.verticalOffset;
 				});
 			}
@@ -181,12 +200,23 @@ export class ParallaxViewCommon extends _gridLayout.GridLayout implements _view.
 
 	}
 
-	get android(): any {
-		return;
+	addDropShadow(marginTop: number, width: number): _stackLayout.StackLayout {
+		let wrapper = new _stackLayout.StackLayout();
+		wrapper.width = width;
+		wrapper.height = 3;
+		wrapper.marginTop = marginTop;
+		wrapper.addChild(this.shadowView(0.4, width));
+		wrapper.addChild(this.shadowView(0.2, width));
+		wrapper.addChild(this.shadowView(0.05, width));
+		return wrapper;
 	}
 
-	get ios(): any {
-		return;
+	shadowView(opacity: number, width: number): _stackLayout.StackLayout {
+		let shadowRow = new _stackLayout.StackLayout();
+		shadowRow.backgroundColor = new _color.Color('black');
+		shadowRow.opacity = opacity;
+		shadowRow.height = 1;
+		return shadowRow;
 	}
 	fadeViews(topHeight: number, verticalOffset: number, viewsToFade: _view.View[]): void {
 		if (verticalOffset < topHeight) {
@@ -226,6 +256,21 @@ export class ParallaxViewCommon extends _gridLayout.GridLayout implements _view.
 			return 0;
 		}
 	}
+
+	displayDevWarning(message: string, ...viewsToCollapse: _view.View[]): void {
+		let warningText = new _label.Label();
+		warningText.text = message;
+		warningText.color = new _color.Color('red');
+		warningText.textWrap = true;
+		warningText.marginTop = 50;
+		this.addChild(warningText);
+		viewsToCollapse.forEach((view: _view.View) => {
+			if (view != null) {
+				view.visibility = 'collapse';
+			}
+		});
+	}
+
 	_addChildFromBuilder = (name: string, value: any) => {
 		if (value instanceof _view.View) {
 			this._childLayouts.push(value);
