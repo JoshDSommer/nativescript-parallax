@@ -1,4 +1,4 @@
-#NativeScript Parallax View Plugin.
+#NativeScript Parallax View Plugin for Android & iOS.
 
 
 ###Parallax Scroll
