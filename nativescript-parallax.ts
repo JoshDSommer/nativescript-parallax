@@ -3,7 +3,7 @@ import {
 	Header as HeaderTemplate,
 	Content as ContentTemplate,
 	Anchored as AnchoredTemplate
-} from './nativescript-parallax.common';
+} from './common';
 
 export class ParallaxView extends ParallaxViewCommon {
 

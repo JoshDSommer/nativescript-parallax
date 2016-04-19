@@ -1,18 +1,16 @@
 import * as app from 'application';
-import * as _scrollViewModule from 'ui/scroll-view';
-import * as _gridLayout from 'ui/layouts/grid-layout';
-import * as _absoluteLayout from 'ui/layouts/absolute-layout';
-import * as _view from 'ui/core/view';
-import * as _frame from 'ui/frame';
-import * as _pages from 'ui/page';
-import * as _label from 'ui/label';
-import * as _stackLayout from 'ui/layouts/stack-layout';
-import * as _color from 'color';
+import {ScrollView, ScrollEventData} from 'ui/scroll-view';
+import {GridLayout, ItemSpec, GridUnitType} from 'ui/layouts/grid-layout';
+import {AbsoluteLayout} from 'ui/layouts/absolute-layout';
+import {View, AddChildFromBuilder} from 'ui/core/view';
+import {Label} from 'ui/label';
+import {StackLayout} from 'ui/layouts/stack-layout';
+import {Color} from 'color';
 
-export class Header extends _stackLayout.StackLayout {
+export class Header extends StackLayout {
 
 }
-export class Anchored extends _stackLayout.StackLayout {
+export class Anchored extends StackLayout {
 	private _dropShadow: boolean;
 	get dropShadow(): boolean {
 		return this._dropShadow;
@@ -27,13 +25,13 @@ export class Anchored extends _stackLayout.StackLayout {
 	}
 }
 
-export class Content extends _stackLayout.StackLayout {
+export class Content extends StackLayout {
 
 }
 
-export class ParallaxViewCommon extends _gridLayout.GridLayout implements _view.AddChildFromBuilder {
+export class ParallaxViewCommon extends GridLayout implements AddChildFromBuilder {
 	private _controlsToFade: string;
-	private _childLayouts: _view.View[];
+	private _childLayouts: View[];
 	private _includesAnchored: boolean;
 	private _topOpacity: number;
 	private _loaded: boolean;
@@ -59,13 +57,13 @@ export class ParallaxViewCommon extends _gridLayout.GridLayout implements _view.
 		this._childLayouts = [];
 		let headerView: Header;
 		let contentView: Content;
-		let scrollView: _scrollViewModule.ScrollView = new _scrollViewModule.ScrollView();
-		let viewsToFade: _view.View[];
+		let scrollView: ScrollView = new ScrollView();
+		let viewsToFade: View[];
 		let maxTopViewHeight: number;
 		let controlsToFade: string[];
-		let anchoredRow: _absoluteLayout.AbsoluteLayout = new _absoluteLayout.AbsoluteLayout();
-		let row = new _gridLayout.ItemSpec(2, _gridLayout.GridUnitType.star);
-		let column = new _gridLayout.ItemSpec(1, _gridLayout.GridUnitType.star);
+		let anchoredRow: AbsoluteLayout = new AbsoluteLayout();
+		let row = new ItemSpec(2, GridUnitType.star);
+		let column = new ItemSpec(1, GridUnitType.star);
 		let invalidSetup = false;
 
 
@@ -78,7 +76,7 @@ export class ParallaxViewCommon extends _gridLayout.GridLayout implements _view.
 		this._topOpacity = 1;
 		this._loaded = false;
 
-		this.on(_gridLayout.GridLayout.loadedEvent, (data: any) => {
+		this.on(GridLayout.loadedEvent, (data: any) => {
 			//prevents re adding views on resume in android.
 			if (!this._loaded) {
 				this._loaded = true;
@@ -88,13 +86,13 @@ export class ParallaxViewCommon extends _gridLayout.GridLayout implements _view.
 				this.addChild(scrollView);
 				this.addChild(anchoredRow);
 
-				_gridLayout.GridLayout.setRow(scrollView, 1);
-				_gridLayout.GridLayout.setRow(anchoredRow, 0);
-				_gridLayout.GridLayout.setColumn(scrollView, 1);
-				_gridLayout.GridLayout.setColumn(anchoredRow, 0);
+				GridLayout.setRow(scrollView, 1);
+				GridLayout.setRow(anchoredRow, 0);
+				GridLayout.setColumn(scrollView, 1);
+				GridLayout.setColumn(anchoredRow, 0);
 
 				//creates a new stack layout to wrap the content inside of the plugin.
-				let wrapperStackLayout = new _stackLayout.StackLayout();
+				let wrapperStackLayout = new StackLayout();
 				scrollView.content = wrapperStackLayout;
 
 				this._childLayouts.forEach(element => {
@@ -152,7 +150,7 @@ export class ParallaxViewCommon extends _gridLayout.GridLayout implements _view.
 				}
 
 				viewsToFade = [];
-				//scrollView = <_scrollViewModule.ScrollView>this;
+				//scrollView = <ScrollView>this;
 				if (this.controlsToFade == null) {
 					controlsToFade = [];
 				} else {
@@ -162,7 +160,7 @@ export class ParallaxViewCommon extends _gridLayout.GridLayout implements _view.
 				maxTopViewHeight = headerView.height;
 
 				controlsToFade.forEach((id: string): void => {
-					let newView: _view.View = headerView.getViewById(id);
+					let newView: View = headerView.getViewById(id);
 					if (newView != null) {
 						viewsToFade.push(newView);
 					}
@@ -176,7 +174,7 @@ export class ParallaxViewCommon extends _gridLayout.GridLayout implements _view.
 
 				let prevOffset = -10;
 
-				scrollView.on(_scrollViewModule.ScrollView.scrollEvent, (args: _scrollViewModule.ScrollEventData) => {
+				scrollView.on(ScrollView.scrollEvent, (args: ScrollEventData) => {
 					if (this._includesAnchored) {
 						anchoredRow.marginTop = this.getAnchoredTopHeight(maxTopViewHeight, scrollView.verticalOffset);
 					}
@@ -200,8 +198,8 @@ export class ParallaxViewCommon extends _gridLayout.GridLayout implements _view.
 
 	}
 
-	addDropShadow(marginTop: number, width: number): _stackLayout.StackLayout {
-		let wrapper = new _stackLayout.StackLayout();
+	addDropShadow(marginTop: number, width: number): StackLayout {
+		let wrapper = new StackLayout();
 		wrapper.width = width;
 		wrapper.height = 3;
 		wrapper.marginTop = marginTop;
@@ -211,19 +209,19 @@ export class ParallaxViewCommon extends _gridLayout.GridLayout implements _view.
 		return wrapper;
 	}
 
-	shadowView(opacity: number, width: number): _stackLayout.StackLayout {
-		let shadowRow = new _stackLayout.StackLayout();
-		shadowRow.backgroundColor = new _color.Color('black');
+	shadowView(opacity: number, width: number): StackLayout {
+		let shadowRow = new StackLayout();
+		shadowRow.backgroundColor = new Color('black');
 		shadowRow.opacity = opacity;
 		shadowRow.height = 1;
 		return shadowRow;
 	}
-	fadeViews(topHeight: number, verticalOffset: number, viewsToFade: _view.View[]): void {
+	fadeViews(topHeight: number, verticalOffset: number, viewsToFade: View[]): void {
 		if (verticalOffset < topHeight) {
 			this._topOpacity = parseFloat((1 - (verticalOffset * 0.01)).toString());
 			if (this._topOpacity > 0 && this._topOpacity <= 1) {
 				//fade each control
-				viewsToFade.forEach((view: _view.View): void => {
+				viewsToFade.forEach((view: View): void => {
 					view.opacity = this._topOpacity;
 				});
 			}
@@ -257,14 +255,14 @@ export class ParallaxViewCommon extends _gridLayout.GridLayout implements _view.
 		}
 	}
 
-	displayDevWarning(message: string, ...viewsToCollapse: _view.View[]): void {
-		let warningText = new _label.Label();
+	displayDevWarning(message: string, ...viewsToCollapse: View[]): void {
+		let warningText = new Label();
 		warningText.text = message;
-		warningText.color = new _color.Color('red');
+		warningText.color = new Color('red');
 		warningText.textWrap = true;
 		warningText.marginTop = 50;
 		this.addChild(warningText);
-		viewsToCollapse.forEach((view: _view.View) => {
+		viewsToCollapse.forEach((view: View) => {
 			if (view != null) {
 				view.visibility = 'collapse';
 			}
@@ -272,7 +270,7 @@ export class ParallaxViewCommon extends _gridLayout.GridLayout implements _view.
 	}
 
 	_addChildFromBuilder = (name: string, value: any) => {
-		if (value instanceof _view.View) {
+		if (value instanceof View) {
 			this._childLayouts.push(value);
 		}
 	};
