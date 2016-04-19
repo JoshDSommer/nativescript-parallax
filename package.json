@@ -15,7 +15,7 @@
 	"scripts": {
 		"build": "tsc",
 		"demo.ios": "npm run preparedemo &&  cd demo &&  tns run ios",
-		"demo.android": "npm run preparedemo &&  cd demo &&  tns run android",
+		"demo.android": "npm run preparedemo &&  cd demo &&  tns emulate android",
 		"preparedemo": "npm run build &&  cd demo &&  tns plugin remove nativescript-parallax &&  tns plugin add .. &&  tns install",
 		"setup": "cd demo &&  npm install &&  cd .. &&  npm run build &&  cd demo &&  tns plugin add .. &&  cd .."
 	},
@@ -27,11 +27,12 @@
 		"NativeScript",
 		"JavaScript",
 		"Android",
-		"iOS"
+		"iOS",
+		"Parallax"
 	],
 	"author": {
-		"name": "Your Name",
-		"email": "youremail@yourdomain.com"
+		"name": "Josh Sommer",
+		"email": "joshdsommer@gmail.com"
 	},
 	"bugs": {
 		"url": "https://github.com/TheOriginalJosh/nativescript-parallax/issues"
@@ -40,6 +41,6 @@
 	"homepage": "https://github.com/TheOriginalJosh/nativescript-parallax",
 	"readmeFilename": "README.md",
 	"devDependencies": {
-		"typescript": "^1.8.7"
+		"typescript": "^1.8.9"
 	}
 }
