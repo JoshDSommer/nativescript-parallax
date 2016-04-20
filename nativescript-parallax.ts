@@ -157,8 +157,6 @@ export class ParallaxView extends GridLayout implements AddChildFromBuilder {
 					controlsToFade = this.controlsToFade.split(',');
 				}
 
-				maxTopViewHeight = headerView.height;
-
 				controlsToFade.forEach((id: string): void => {
 					let newView: View = headerView.getViewById(id);
 					if (newView != null) {
@@ -187,9 +185,7 @@ export class ParallaxView extends GridLayout implements AddChildFromBuilder {
 					prevOffset = scrollView.verticalOffset;
 				});
 			}
-
 		});
-
 	}
 
 	addDropShadow(marginTop: number, width: number): StackLayout {
