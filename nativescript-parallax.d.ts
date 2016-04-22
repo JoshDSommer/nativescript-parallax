@@ -16,15 +16,18 @@ export declare class ParallaxView extends GridLayout implements AddChildFromBuil
     private _includesAnchored;
     private _topOpacity;
     private _loaded;
+    private _minimumHeights;
     controlsToFade: string;
     android: any;
     ios: any;
     constructor();
-    addDropShadow(marginTop: number, width: number): StackLayout;
-    shadowView(opacity: number, width: number): StackLayout;
-    fadeViews(topHeight: number, verticalOffset: number, viewsToFade: View[]): void;
-    getAnchoredTopHeight(topHeight: number, verticalOffset: number): number;
-    getTopViewHeight(topHeight: number, verticalOffset: number): number;
+    private setMinimumHeight(contentView, anchoredRow, minHeight);
+    private getMinimumHeights();
+    private addDropShadow(marginTop, width);
+    private shadowView(opacity, width);
+    private fadeViews(topHeight, verticalOffset, viewsToFade);
+    private getAnchoredTopHeight(topHeight, verticalOffset);
+    private getTopViewHeight(topHeight, verticalOffset);
     displayDevWarning(message: string, ...viewsToCollapse: View[]): void;
     _addChildFromBuilder: (name: string, value: any) => void;
 }

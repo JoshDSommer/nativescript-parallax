@@ -1,4 +1,5 @@
 import * as app from 'application';
+import * as Platform from 'platform';
 import {ScrollView, ScrollEventData} from 'ui/scroll-view';
 import {GridLayout, ItemSpec, GridUnitType} from 'ui/layouts/grid-layout';
 import {AbsoluteLayout} from 'ui/layouts/absolute-layout';
@@ -29,12 +30,18 @@ export class Content extends StackLayout {
 
 }
 
+interface IMinimumHeights {
+	portrait: number;
+	landscape: number;
+}
+
 export class ParallaxView extends GridLayout implements AddChildFromBuilder {
 	private _controlsToFade: string;
 	private _childLayouts: View[];
 	private _includesAnchored: boolean;
 	private _topOpacity: number;
 	private _loaded: boolean;
+	private _minimumHeights: IMinimumHeights;
 
 	get controlsToFade(): string {
 		return this._controlsToFade;
@@ -65,7 +72,7 @@ export class ParallaxView extends GridLayout implements AddChildFromBuilder {
 		let row = new ItemSpec(2, GridUnitType.star);
 		let column = new ItemSpec(1, GridUnitType.star);
 		let invalidSetup = false;
-
+		this._minimumHeights = this.getMinimumHeights();
 
 
 		//must set the vertical alignmnet or else there is issues with margin-top of 0 being the middle of the screen.
@@ -165,6 +172,12 @@ export class ParallaxView extends GridLayout implements AddChildFromBuilder {
 				});
 
 				let prevOffset = -10;
+				//set the min height on load
+				this.setMinimumHeight(contentView, anchoredRow, Platform.screen.mainScreen.heightDIPs);
+				app.on(app.orientationChangedEvent, (args: app.OrientationChangedEventData) => {
+					//sets the content view to have a min height so that scroll always allows full coverage of header, with or without anchor.
+					this.setMinimumHeight(contentView, anchoredRow, this._minimumHeights[args.newValue]);
+				});
 
 				scrollView.on(ScrollView.scrollEvent, (args: ScrollEventData) => {
 					if (this._includesAnchored) {
@@ -187,8 +200,31 @@ export class ParallaxView extends GridLayout implements AddChildFromBuilder {
 			}
 		});
 	}
+	private setMinimumHeight(contentView: Content, anchoredRow: AbsoluteLayout, minHeight: number): void {
+		if (this._includesAnchored) {
+			minHeight = minHeight - (anchoredRow.height * 0.9); //0.9 is to give it a little bit extra space.
+		}
+		contentView.minHeight = minHeight;
+	}
 
-	addDropShadow(marginTop: number, width: number): StackLayout {
+	private getMinimumHeights(): IMinimumHeights {
+		let height1 = Platform.screen.mainScreen.heightDIPs;
+		let height2 = Platform.screen.mainScreen.widthDIPs;
+		//if the first hieght is lager than the second hiehgt it's the portrait views min hieght.
+		if (height1 > height2) {
+			return {
+				portrait: height1,
+				landscape: height2
+			};
+		} else {
+			return {
+				portrait: height2,
+				landscape: height1
+			};
+		}
+	}
+
+	private addDropShadow(marginTop: number, width: number): StackLayout {
 		let wrapper = new StackLayout();
 		wrapper.width = width;
 		wrapper.height = 3;
@@ -199,14 +235,14 @@ export class ParallaxView extends GridLayout implements AddChildFromBuilder {
 		return wrapper;
 	}
 
-	shadowView(opacity: number, width: number): StackLayout {
+	private shadowView(opacity: number, width: number): StackLayout {
 		let shadowRow = new StackLayout();
 		shadowRow.backgroundColor = new Color('black');
 		shadowRow.opacity = opacity;
 		shadowRow.height = 1;
 		return shadowRow;
 	}
-	fadeViews(topHeight: number, verticalOffset: number, viewsToFade: View[]): void {
+	private fadeViews(topHeight: number, verticalOffset: number, viewsToFade: View[]): void {
 		if (verticalOffset < topHeight) {
 			this._topOpacity = parseFloat((1 - (verticalOffset * 0.01)).toString());
 			if (this._topOpacity > 0 && this._topOpacity <= 1) {
@@ -217,7 +253,7 @@ export class ParallaxView extends GridLayout implements AddChildFromBuilder {
 			}
 		}
 	}
-	getAnchoredTopHeight(topHeight: number, verticalOffset: number): number {
+	private getAnchoredTopHeight(topHeight: number, verticalOffset: number): number {
 		let marginTop: number;
 		if (verticalOffset <= topHeight) {
 			marginTop = topHeight - (verticalOffset * 2);
@@ -237,7 +273,7 @@ export class ParallaxView extends GridLayout implements AddChildFromBuilder {
 		return marginTop;
 	}
 	//calcutes the top views height  using the scrollview's verticalOffset
-	getTopViewHeight(topHeight: number, verticalOffset: number): number {
+	private getTopViewHeight(topHeight: number, verticalOffset: number): number {
 		if ((topHeight - verticalOffset) >= 0) {
 			return topHeight - verticalOffset;
 		} else {
