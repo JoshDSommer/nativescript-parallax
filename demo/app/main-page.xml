@@ -1,7 +1,7 @@
 <Page xmlns="http://schemas.nativescript.org/tns.xsd"
 	 xmlns:parallax="nativescript-parallax"
 	loaded="pageLoaded">
-  	<parallax:ParallaxView bounce="true" controlsToFade="headerLabel,headerLabel2">
+  	<parallax:ParallaxView bounce="false" controlsToFade="headerLabel,headerLabel2">
 		<parallax:Header class="header-template">
 			<Label id="headerLabel" text="Parallax"></Label>
 			<Label id="headerLabel2" text="Component"></Label>

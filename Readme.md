@@ -82,6 +82,7 @@ The ``<parallax:Anchored>`` has a property called `dropShadow` if set to true it
 
 If the inner content of ``<parallax:Content>`` isn't long enough to cause the page to scroll. If not it will not show the Parallax effect.
 
+As of version 1.1.0 the bounce/overscroll effect is disable by default to turn it back on set `bounce=true` on the ParallaxView element.
 ###Plugin Development Work Flow.
 
 * Clone repository to your machine.
