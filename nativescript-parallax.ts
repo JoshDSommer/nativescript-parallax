@@ -50,6 +50,7 @@ export class ParallaxView extends GridLayout implements AddChildFromBuilder {
 	set bounce(value: boolean) {
 		this._bounce = value;
 	}
+
 	get controlsToFade(): string {
 		return this._controlsToFade;
 	}
@@ -82,7 +83,7 @@ export class ParallaxView extends GridLayout implements AddChildFromBuilder {
 		this._minimumHeights = this.getMinimumHeights();
 
 		if (this.bounce == null) {
-			this.bounce = true; //default to true.
+			this.bounce = false; //disable bounce by default.
 		}
 		//must set the vertical alignmnet or else there is issues with margin-top of 0 being the middle of the screen.
 		this.verticalAlignment = 'top';
@@ -163,12 +164,11 @@ export class ParallaxView extends GridLayout implements AddChildFromBuilder {
 					//pushes content down a to compensate for anchor.
 					contentView.marginTop = anchoredRow.height;
 				}
-				//disables bounce/overscroll defaulted to true to not mess up existing users projects
-				if (this.bounce) {
+				//disables bounce/overscroll defaulted to false
+				if (this.bounce === false) {
 					if (app.ios) {
 						scrollView.ios.bounces = false;
 					} else if (app.android) {
-
 						scrollView.android.setOverScrollMode(2);
 					}
 				}

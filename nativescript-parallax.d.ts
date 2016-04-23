@@ -17,6 +17,8 @@ export declare class ParallaxView extends GridLayout implements AddChildFromBuil
     private _topOpacity;
     private _loaded;
     private _minimumHeights;
+    private _bounce;
+    bounce: boolean;
     controlsToFade: string;
     android: any;
     ios: any;
