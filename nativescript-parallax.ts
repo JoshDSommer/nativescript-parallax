@@ -42,7 +42,14 @@ export class ParallaxView extends GridLayout implements AddChildFromBuilder {
 	private _topOpacity: number;
 	private _loaded: boolean;
 	private _minimumHeights: IMinimumHeights;
+	private _bounce: boolean;
 
+	get bounce(): boolean {
+		return this._bounce;
+	}
+	set bounce(value: boolean) {
+		this._bounce = value;
+	}
 	get controlsToFade(): string {
 		return this._controlsToFade;
 	}
@@ -74,7 +81,9 @@ export class ParallaxView extends GridLayout implements AddChildFromBuilder {
 		let invalidSetup = false;
 		this._minimumHeights = this.getMinimumHeights();
 
-
+		if (this.bounce == null) {
+			this.bounce = true; //default to true.
+		}
 		//must set the vertical alignmnet or else there is issues with margin-top of 0 being the middle of the screen.
 		this.verticalAlignment = 'top';
 		scrollView.verticalAlignment = 'top';
@@ -101,7 +110,6 @@ export class ParallaxView extends GridLayout implements AddChildFromBuilder {
 				//creates a new stack layout to wrap the content inside of the plugin.
 				let wrapperStackLayout = new StackLayout();
 				scrollView.content = wrapperStackLayout;
-
 				this._childLayouts.forEach(element => {
 					if (element instanceof Header) {
 						wrapperStackLayout.addChild(element);
@@ -154,6 +162,15 @@ export class ParallaxView extends GridLayout implements AddChildFromBuilder {
 					}
 					//pushes content down a to compensate for anchor.
 					contentView.marginTop = anchoredRow.height;
+				}
+				//disables bounce/overscroll defaulted to true to not mess up existing users projects
+				if (this.bounce) {
+					if (app.ios) {
+						scrollView.ios.bounces = false;
+					} else if (app.android) {
+
+						scrollView.android.setOverScrollMode(2);
+					}
 				}
 
 				viewsToFade = [];
