@@ -1,5 +1,5 @@
 import { GridLayout } from 'ui/layouts/grid-layout';
-import { View, AddChildFromBuilder } from 'ui/core/view';
+import { AddChildFromBuilder } from 'ui/core/view';
 import { StackLayout } from 'ui/layouts/stack-layout';
 export declare class Header extends StackLayout {
 }
@@ -9,6 +9,10 @@ export declare class Anchored extends StackLayout {
     constructor();
 }
 export declare class Content extends StackLayout {
+}
+export interface IMinimumHeights {
+    portrait: number;
+    landscape: number;
 }
 export declare class ParallaxView extends GridLayout implements AddChildFromBuilder {
     private _controlsToFade;
@@ -23,13 +27,5 @@ export declare class ParallaxView extends GridLayout implements AddChildFromBuil
     android: any;
     ios: any;
     constructor();
-    private setMinimumHeight(contentView, anchoredRow, minHeight);
-    private getMinimumHeights();
-    private addDropShadow(marginTop, width);
-    private shadowView(opacity, width);
-    private fadeViews(topHeight, verticalOffset, viewsToFade);
-    private getAnchoredTopHeight(topHeight, verticalOffset);
-    private getTopViewHeight(topHeight, verticalOffset);
-    displayDevWarning(message: string, ...viewsToCollapse: View[]): void;
     _addChildFromBuilder: (name: string, value: any) => void;
 }

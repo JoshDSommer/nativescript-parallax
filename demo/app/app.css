@@ -6,10 +6,10 @@
 	color:#B2EBF2;
 }
 #headerLabel{
-	font-size: 45;
+	font-size: 25;
 	horizontal-align: center;
-	padding-top:75;
 	color:#B2EBF2;
+	margin-top: 20;
 }
 .header-template{
 	background-color:#212121;

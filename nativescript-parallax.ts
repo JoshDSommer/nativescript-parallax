@@ -7,6 +7,7 @@ import {View, AddChildFromBuilder} from 'ui/core/view';
 import {Label} from 'ui/label';
 import {StackLayout} from 'ui/layouts/stack-layout';
 import {Color} from 'color';
+import {ParallaxUtilities} from './utilities';
 
 export class Header extends StackLayout {
 
@@ -30,7 +31,7 @@ export class Content extends StackLayout {
 
 }
 
-interface IMinimumHeights {
+export interface IMinimumHeights {
 	portrait: number;
 	landscape: number;
 }
@@ -80,7 +81,7 @@ export class ParallaxView extends GridLayout implements AddChildFromBuilder {
 		let row = new ItemSpec(2, GridUnitType.star);
 		let column = new ItemSpec(1, GridUnitType.star);
 		let invalidSetup = false;
-		this._minimumHeights = this.getMinimumHeights();
+		this._minimumHeights = ParallaxUtilities.getMinimumHeights();
 
 		if (this.bounce == null) {
 			this.bounce = false; //disable bounce by default.
@@ -128,7 +129,7 @@ export class ParallaxView extends GridLayout implements AddChildFromBuilder {
 						anchoredRow.addChild(element);
 						if ((<Anchored>element).dropShadow) {
 							anchoredRow.height = element.height;
-							anchoredRow.addChild(this.addDropShadow(element.height, element.width));
+							anchoredRow.addChild(ParallaxUtilities.addDropShadow(element.height, element.width));
 						} else {
 							anchoredRow.height = element.height;
 						}
@@ -138,19 +139,19 @@ export class ParallaxView extends GridLayout implements AddChildFromBuilder {
 				});
 
 				if (headerView == null || contentView == null) {
-					this.displayDevWarning('Parallax ScrollView Setup Invalid. You must have Header and Content tags',
+					ParallaxUtilities.displayDevWarning(this, 'Parallax ScrollView Setup Invalid. You must have Header and Content tags',
 						headerView,
 						contentView, contentView);
 					return;
 				}
 				if (isNaN(headerView.height)) {
-					this.displayDevWarning('Header MUST have a height set.',
+					ParallaxUtilities.displayDevWarning(this, 'Header MUST have a height set.',
 						headerView,
 						anchoredRow, contentView);
 					return;
 				}
 				if (this._includesAnchored && isNaN(anchoredRow.height)) {
-					this.displayDevWarning('Anchor MUST have a height set.',
+					ParallaxUtilities.displayDevWarning(this, 'Anchor MUST have a height set.',
 						anchoredRow, headerView, contentView);
 					return;
 				}
@@ -190,21 +191,21 @@ export class ParallaxView extends GridLayout implements AddChildFromBuilder {
 
 				let prevOffset = -10;
 				//set the min height on load
-				this.setMinimumHeight(contentView, anchoredRow, Platform.screen.mainScreen.heightDIPs);
+				ParallaxUtilities.setMinimumHeight(contentView, anchoredRow, Platform.screen.mainScreen.heightDIPs, this._includesAnchored);
 				app.on(app.orientationChangedEvent, (args: app.OrientationChangedEventData) => {
 					//sets the content view to have a min height so that scroll always allows full coverage of header, with or without anchor.
-					this.setMinimumHeight(contentView, anchoredRow, this._minimumHeights[args.newValue]);
+					ParallaxUtilities.setMinimumHeight(contentView, anchoredRow, this._minimumHeights[args.newValue], this._includesAnchored);
 				});
 
 				scrollView.on(ScrollView.scrollEvent, (args: ScrollEventData) => {
 					if (this._includesAnchored) {
-						anchoredRow.marginTop = this.getAnchoredTopHeight(maxTopViewHeight, scrollView.verticalOffset);
+						anchoredRow.marginTop = ParallaxUtilities.getAnchoredTopHeight(maxTopViewHeight, scrollView.verticalOffset);
 					}
 
-					headerView.height = this.getTopViewHeight(maxTopViewHeight, scrollView.verticalOffset);
+					headerView.height = ParallaxUtilities.getTopViewHeight(maxTopViewHeight, scrollView.verticalOffset);
 
 					//fades in and out label in topView
-					this.fadeViews(maxTopViewHeight, scrollView.verticalOffset, viewsToFade);
+					ParallaxUtilities.fadeViews(maxTopViewHeight, scrollView.verticalOffset, viewsToFade, this._topOpacity);
 
 					//leaving in the up/down detection as it may be handy in the future.
 					if (prevOffset <= scrollView.verticalOffset) {
@@ -217,100 +218,7 @@ export class ParallaxView extends GridLayout implements AddChildFromBuilder {
 			}
 		});
 	}
-	private setMinimumHeight(contentView: Content, anchoredRow: AbsoluteLayout, minHeight: number): void {
-		if (this._includesAnchored) {
-			minHeight = minHeight - (anchoredRow.height * 0.9); //0.9 is to give it a little bit extra space.
-		}
-		contentView.minHeight = minHeight;
-	}
 
-	private getMinimumHeights(): IMinimumHeights {
-		let height1 = Platform.screen.mainScreen.heightDIPs;
-		let height2 = Platform.screen.mainScreen.widthDIPs;
-		//if the first hieght is lager than the second hiehgt it's the portrait views min hieght.
-		if (height1 > height2) {
-			return {
-				portrait: height1,
-				landscape: height2
-			};
-		} else {
-			return {
-				portrait: height2,
-				landscape: height1
-			};
-		}
-	}
-
-	private addDropShadow(marginTop: number, width: number): StackLayout {
-		let wrapper = new StackLayout();
-		wrapper.width = width;
-		wrapper.height = 3;
-		wrapper.marginTop = marginTop;
-		wrapper.addChild(this.shadowView(0.4, width));
-		wrapper.addChild(this.shadowView(0.2, width));
-		wrapper.addChild(this.shadowView(0.05, width));
-		return wrapper;
-	}
-
-	private shadowView(opacity: number, width: number): StackLayout {
-		let shadowRow = new StackLayout();
-		shadowRow.backgroundColor = new Color('black');
-		shadowRow.opacity = opacity;
-		shadowRow.height = 1;
-		return shadowRow;
-	}
-	private fadeViews(topHeight: number, verticalOffset: number, viewsToFade: View[]): void {
-		if (verticalOffset < topHeight) {
-			this._topOpacity = parseFloat((1 - (verticalOffset * 0.01)).toString());
-			if (this._topOpacity > 0 && this._topOpacity <= 1) {
-				//fade each control
-				viewsToFade.forEach((view: View): void => {
-					view.opacity = this._topOpacity;
-				});
-			}
-		}
-	}
-	private getAnchoredTopHeight(topHeight: number, verticalOffset: number): number {
-		let marginTop: number;
-		if (verticalOffset <= topHeight) {
-			marginTop = topHeight - (verticalOffset * 2);
-			if (marginTop > topHeight) {
-				marginTop = topHeight;
-			}
-			if (app.android) {
-				marginTop = marginTop - 5; // get rid of white line that happens on android
-			}
-		} else {
-			marginTop = 0;
-		}
-		if (marginTop < 0) {
-			marginTop = 0;
-		}
-
-		return marginTop;
-	}
-	//calcutes the top views height  using the scrollview's verticalOffset
-	private getTopViewHeight(topHeight: number, verticalOffset: number): number {
-		if ((topHeight - verticalOffset) >= 0) {
-			return topHeight - verticalOffset;
-		} else {
-			return 0;
-		}
-	}
-
-	displayDevWarning(message: string, ...viewsToCollapse: View[]): void {
-		let warningText = new Label();
-		warningText.text = message;
-		warningText.color = new Color('red');
-		warningText.textWrap = true;
-		warningText.marginTop = 50;
-		this.addChild(warningText);
-		viewsToCollapse.forEach((view: View) => {
-			if (view != null) {
-				view.visibility = 'collapse';
-			}
-		});
-	}
 
 	_addChildFromBuilder = (name: string, value: any) => {
 		if (value instanceof View) {
