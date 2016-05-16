@@ -36,7 +36,7 @@ export interface IMinimumHeights {
 	landscape: number;
 }
 
-export class ParallaxView extends GridLayout implements AddChildFromBuilder {
+export class ParallaxView extends GridLayout {
 	private _controlsToFade: string;
 	private _childLayouts: View[];
 	private _includesAnchored: boolean;
@@ -98,6 +98,7 @@ export class ParallaxView extends GridLayout implements AddChildFromBuilder {
 			//prevents re adding views on resume in android.
 			if (!this._loaded) {
 				this._loaded = true;
+				this._childLayouts = ParallaxUtilities.pluckViews(this);
 
 				this.addRow(row);
 				this.addColumn(column);
@@ -113,21 +114,21 @@ export class ParallaxView extends GridLayout implements AddChildFromBuilder {
 				let wrapperStackLayout = new StackLayout();
 				scrollView.content = wrapperStackLayout;
 				this._childLayouts.forEach(element => {
-					if (element instanceof Header) {
+					if (element instanceof Header || (StackLayout && ParallaxUtilities.containsCssClass(element, 'header'))) {
 						wrapperStackLayout.addChild(element);
-						headerView = element;
+						headerView = <Header>element;
 					}
 				});
 				this._childLayouts.forEach(element => {
-					if (element instanceof Content) {
+					if (element instanceof Content || (StackLayout && ParallaxUtilities.containsCssClass(element, 'content'))) {
 						wrapperStackLayout.addChild(element);
-						contentView = element;
+						contentView = <Content>element;
 					}
 				});
 				this._childLayouts.forEach(element => {
-					if (element instanceof Anchored) {
+					if (element instanceof Anchored || (StackLayout && ParallaxUtilities.containsCssClass(element, 'anchor'))) {
 						anchoredRow.addChild(element);
-						if ((<Anchored>element).dropShadow) {
+						if ((<Anchored>element).dropShadow || ParallaxUtilities.containsCssClass(element, 'dropShadow')) {
 							anchoredRow.height = element.height;
 							anchoredRow.addChild(ParallaxUtilities.addDropShadow(element.height, element.width));
 						} else {
@@ -158,12 +159,12 @@ export class ParallaxView extends GridLayout implements AddChildFromBuilder {
 				maxTopViewHeight = headerView.height;
 
 				if (this._includesAnchored) {
-					anchoredRow.marginTop = maxTopViewHeight;
+					anchoredRow.translateY = maxTopViewHeight;
 					if (app.android) { //helps prevent background leaking int on scroll;
-						anchoredRow.marginTop = anchoredRow.marginTop - 5; // get rid of white line that happens on android
+						anchoredRow.translateY = anchoredRow.translateY - 5; // get rid of white line that happens on android
 					}
 					//pushes content down a to compensate for anchor.
-					contentView.marginTop = anchoredRow.height;
+					contentView.translateY = anchoredRow.height;
 				}
 				//disables bounce/overscroll defaulted to false
 				if (this.bounce === false) {
@@ -199,7 +200,7 @@ export class ParallaxView extends GridLayout implements AddChildFromBuilder {
 
 				scrollView.on(ScrollView.scrollEvent, (args: ScrollEventData) => {
 					if (this._includesAnchored) {
-						anchoredRow.marginTop = ParallaxUtilities.getAnchoredTopHeight(maxTopViewHeight, scrollView.verticalOffset);
+						anchoredRow.translateY = ParallaxUtilities.getAnchoredTopHeight(maxTopViewHeight, scrollView.verticalOffset);
 					}
 
 					headerView.height = ParallaxUtilities.getTopViewHeight(maxTopViewHeight, scrollView.verticalOffset);
@@ -218,11 +219,4 @@ export class ParallaxView extends GridLayout implements AddChildFromBuilder {
 			}
 		});
 	}
-
-
-	_addChildFromBuilder = (name: string, value: any) => {
-		if (value instanceof View) {
-			this._childLayouts.push(value);
-		}
-	};
 }

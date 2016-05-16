@@ -1,5 +1,4 @@
 import { GridLayout } from 'ui/layouts/grid-layout';
-import { AddChildFromBuilder } from 'ui/core/view';
 import { StackLayout } from 'ui/layouts/stack-layout';
 export declare class Header extends StackLayout {
 }
@@ -14,7 +13,7 @@ export interface IMinimumHeights {
     portrait: number;
     landscape: number;
 }
-export declare class ParallaxView extends GridLayout implements AddChildFromBuilder {
+export declare class ParallaxView extends GridLayout {
     private _controlsToFade;
     private _childLayouts;
     private _includesAnchored;
@@ -27,5 +26,4 @@ export declare class ParallaxView extends GridLayout implements AddChildFromBuil
     android: any;
     ios: any;
     constructor();
-    _addChildFromBuilder: (name: string, value: any) => void;
 }
