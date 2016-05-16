@@ -1,6 +1,6 @@
 {
 	"name": "nativescript-parallax",
-	"version": "1.1.0",
+	"version": "1.2.0",
 	"description": "NativeScript Parallax View Plugin.",
 	"main": "nativescript-parallax.js",
 	"nativescript": {
@@ -17,7 +17,7 @@
 		"demo.ios": "npm run preparedemo &&  cd demo &&  tns run ios",
 		"demo.android": "npm run preparedemo &&  cd demo &&  tns run android",
 		"preparedemo": "npm run build &&  cd demo &&  tns plugin remove nativescript-parallax &&  tns plugin add .. &&  tns install",
-		"setup": "cd demo &&  npm install &&  cd .. &&  npm run build &&  cd demo &&  tns plugin add .. &&  cd .."
+		"setup": "npm install && cd demo &&  npm install &&  cd .. &&  npm run build &&  cd demo &&  tns plugin add .. &&  cd .."
 	},
 	"repository": {
 		"type": "git",
