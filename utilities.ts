@@ -38,11 +38,11 @@ export class ParallaxUtilities {
 		}
 	}
 
-	public static addDropShadow(marginTop: number, width: number): StackLayout {
+	public static addDropShadow(translateY: number, width: number): StackLayout {
 		let wrapper = new StackLayout();
 		wrapper.width = width;
 		wrapper.height = 3;
-		wrapper.marginTop = marginTop;
+		wrapper.translateY = translateY;
 		wrapper.addChild(this.shadowView(0.4, width));
 		wrapper.addChild(this.shadowView(0.2, width));
 		wrapper.addChild(this.shadowView(0.05, width));
@@ -68,23 +68,23 @@ export class ParallaxUtilities {
 		}
 	}
 	public static getAnchoredTopHeight(topHeight: number, verticalOffset: number): number {
-		let marginTop: number;
+		let translateY: number;
 		if (verticalOffset <= topHeight) {
-			marginTop = topHeight - (verticalOffset * 2);
-			if (marginTop > topHeight) {
-				marginTop = topHeight;
+			translateY = topHeight - (verticalOffset * 2);
+			if (translateY > topHeight) {
+				translateY = topHeight;
 			}
 			if (app.android) {
-				marginTop = marginTop - 5; // get rid of white line that happens on android
+				translateY = translateY - 5; // get rid of white line that happens on android
 			}
 		} else {
-			marginTop = 0;
+			translateY = 0;
 		}
-		if (marginTop < 0) {
-			marginTop = 0;
+		if (translateY < 0) {
+			translateY = 0;
 		}
 
-		return marginTop;
+		return translateY;
 	}
 	//calcutes the top views height  using the scrollview's verticalOffset
 	public static getTopViewHeight(topHeight: number, verticalOffset: number): number {
@@ -95,17 +95,31 @@ export class ParallaxUtilities {
 		}
 	}
 
-	public static displayDevWarning(parent:GridLayout, message: string, ...viewsToCollapse: View[]): void {
+	public static displayDevWarning(parent: GridLayout, message: string, ...viewsToCollapse: View[]): void {
 		let warningText = new Label();
 		warningText.text = message;
 		warningText.color = new Color('red');
 		warningText.textWrap = true;
-		warningText.marginTop = 50;
+		warningText.translateY = 50;
 		parent.addChild(warningText);
 		viewsToCollapse.forEach((view: View) => {
 			if (view != null) {
 				view.visibility = 'collapse';
 			}
 		});
+	}
+
+	public static pluckViews(parent: GridLayout): View[] {
+		let returnViews: View[] = [];
+		parent.eachLayoutChild((child: View) => {
+			returnViews.push(child);
+		});
+		parent.removeChildren();
+		return returnViews;
+	}
+
+	public static containsCssClass(view: View, className: string): boolean {
+		const cssClasses = view.className.split(' ');
+		return cssClasses.indexOf(className) > -1 ? true : false;
 	}
 }
