@@ -1,5 +1,7 @@
 #NativeScript Parallax View Plugin for Android & iOS.
 
+[![npm](https://img.shields.io/npm/v/nativescript-parallax.svg)](https://www.npmjs.com/package/nativescript-parallax)
+[![npm](https://img.shields.io/npm/dt/nativescript-parallax.svg?label=npm%20downloads)](https://www.npmjs.com/package/nativescript-parallax)
 
 ###Parallax Scroll
 [![NativeScript Parallax Scroll Effect. Click to Play](https://img.youtube.com/vi/sR_Ku7dsm2c/0.jpg)](https://www.youtube.com/embed/sR_Ku7dsm2c)
