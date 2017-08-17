@@ -1,15 +1,15 @@
 {
 	"name": "nativescript-parallax",
-	"version": "1.2.0",
+	"version": "1.3.0",
 	"description": "NativeScript Parallax View Plugin.",
 	"main": "nativescript-parallax.js",
 	"nativescript": {
 		"platforms": {
-			"android": "1.7.0",
-			"ios": "1.7.0"
+			"android": "3.1.0",
+			"ios": "3.1.0"
 		},
 		"tns-ios": {
-			"version": "1.7.0"
+			"version": "3.1.0"
 		}
 	},
 	"scripts": {

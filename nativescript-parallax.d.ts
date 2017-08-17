@@ -23,7 +23,7 @@ export declare class ParallaxView extends GridLayout {
     private _bounce;
     bounce: boolean;
     controlsToFade: string;
-    android: any;
-    ios: any;
+    readonly android: any;
+    readonly ios: any;
     constructor();
 }
