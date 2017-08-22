@@ -17,13 +17,18 @@ export declare class ParallaxView extends GridLayout {
     private _controlsToFade;
     private _childLayouts;
     private _includesAnchored;
+    private _isAnchored;
     private _topOpacity;
     private _loaded;
     private _minimumHeights;
     private _bounce;
+    static scrollEvent: string;
+    static anchoredEvent: string;
+    static unanchoredEvent: string;
     bounce: boolean;
     controlsToFade: string;
-    android: any;
-    ios: any;
+    readonly isAnchored: boolean;
+    readonly android: any;
+    readonly ios: any;
     constructor();
 }

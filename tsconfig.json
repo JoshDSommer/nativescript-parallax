@@ -1,10 +1,14 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "lib": [
+            "es6",
+            "dom"
+        ],
         "module": "commonjs",
         "removeComments": true,
         "experimentalDecorators": true,
         "sourceMap": true,
+        "noEmitOnError": false,
         "declaration": true
     },
     "files": [

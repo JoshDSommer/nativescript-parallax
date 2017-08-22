@@ -1,13 +1,13 @@
 import * as app from 'application';
 import * as Platform from 'platform';
-import {ScrollView, ScrollEventData} from 'ui/scroll-view';
-import {GridLayout, ItemSpec, GridUnitType} from 'ui/layouts/grid-layout';
-import {AbsoluteLayout} from 'ui/layouts/absolute-layout';
-import {View, AddChildFromBuilder} from 'ui/core/view';
-import {Label} from 'ui/label';
-import {StackLayout} from 'ui/layouts/stack-layout';
-import {Color} from 'color';
-import {ParallaxUtilities} from './utilities';
+import { ScrollView, ScrollEventData } from 'ui/scroll-view';
+import { GridLayout, ItemSpec, GridUnitType } from 'ui/layouts/grid-layout';
+import { AbsoluteLayout } from 'ui/layouts/absolute-layout';
+import { View, AddChildFromBuilder } from 'ui/core/view';
+import { Label } from 'ui/label';
+import { StackLayout } from 'ui/layouts/stack-layout';
+import { Color } from 'color';
+import { ParallaxUtilities } from './utilities';
 
 export class Header extends StackLayout {
 
@@ -40,10 +40,16 @@ export class ParallaxView extends GridLayout {
 	private _controlsToFade: string;
 	private _childLayouts: View[];
 	private _includesAnchored: boolean;
+	private _isAnchored: boolean;
 	private _topOpacity: number;
 	private _loaded: boolean;
 	private _minimumHeights: IMinimumHeights;
 	private _bounce: boolean;
+
+	//Events
+	public static scrollEvent = "scroll";
+	public static anchoredEvent = "anchored";
+	public static unanchoredEvent = "unanchored";
 
 	get bounce(): boolean {
 		return this._bounce;
@@ -60,6 +66,10 @@ export class ParallaxView extends GridLayout {
 		this._controlsToFade = value;
 	}
 
+	get isAnchored() {
+		return this._isAnchored;
+	}
+
 	get android(): any {
 		return;
 	}
@@ -71,6 +81,7 @@ export class ParallaxView extends GridLayout {
 	constructor() {
 		super();
 		this._childLayouts = [];
+
 		let headerView: Header;
 		let contentView: Content;
 		let scrollView: ScrollView = new ScrollView();
@@ -78,14 +89,14 @@ export class ParallaxView extends GridLayout {
 		let maxTopViewHeight: number;
 		let controlsToFade: string[];
 		let anchoredRow: AbsoluteLayout = new AbsoluteLayout();
-		let row = new ItemSpec(2, GridUnitType.star);
-		let column = new ItemSpec(1, GridUnitType.star);
+		let row = new ItemSpec(2, GridUnitType.STAR);
+		let column = new ItemSpec(1, GridUnitType.STAR);
 		let invalidSetup = false;
+		let hasBeenAnchored: boolean = false;
+		this._isAnchored = false;
+		this.bounce = false; //disable bounce by default.
 		this._minimumHeights = ParallaxUtilities.getMinimumHeights();
 
-		if (this.bounce == null) {
-			this.bounce = false; //disable bounce by default.
-		}
 		//must set the vertical alignmnet or else there is issues with margin-top of 0 being the middle of the screen.
 		this.verticalAlignment = 'top';
 		scrollView.verticalAlignment = 'top';
@@ -113,31 +124,28 @@ export class ParallaxView extends GridLayout {
 				//creates a new stack layout to wrap the content inside of the plugin.
 				let wrapperStackLayout = new StackLayout();
 				scrollView.content = wrapperStackLayout;
-				this._childLayouts.forEach(element => {
+
+				for (var c = 0; c < this._childLayouts.length; c++) {
+					var element = this._childLayouts[c];
+
 					if (element instanceof Header || (StackLayout && ParallaxUtilities.containsCssClass(element, 'header'))) {
 						wrapperStackLayout.addChild(element);
 						headerView = <Header>element;
-					}
-				});
-				this._childLayouts.forEach(element => {
-					if (element instanceof Content || (StackLayout && ParallaxUtilities.containsCssClass(element, 'content'))) {
+					} else if (element instanceof Content || (StackLayout && ParallaxUtilities.containsCssClass(element, 'content'))) {
 						wrapperStackLayout.addChild(element);
 						contentView = <Content>element;
-					}
-				});
-				this._childLayouts.forEach(element => {
-					if (element instanceof Anchored || (StackLayout && ParallaxUtilities.containsCssClass(element, 'anchor'))) {
+					} else if (element instanceof Anchored || (StackLayout && ParallaxUtilities.containsCssClass(element, 'anchor'))) {
 						anchoredRow.addChild(element);
 						if ((<Anchored>element).dropShadow || ParallaxUtilities.containsCssClass(element, 'dropShadow')) {
 							anchoredRow.height = element.height;
-							anchoredRow.addChild(ParallaxUtilities.addDropShadow(element.height, element.width));
+							anchoredRow.addChild(ParallaxUtilities.addDropShadow(element.height as number, element.getMeasuredWidth()));
 						} else {
 							anchoredRow.height = element.height;
 						}
 						element.verticalAlignment = 'top';
 						this._includesAnchored = true;
 					}
-				});
+				};
 
 				if (headerView == null || contentView == null) {
 					ParallaxUtilities.displayDevWarning(this, 'Parallax ScrollView Setup Invalid. You must have Header and Content tags',
@@ -145,18 +153,18 @@ export class ParallaxView extends GridLayout {
 						contentView, contentView);
 					return;
 				}
-				if (isNaN(headerView.height)) {
+				if (isNaN(headerView.height as number)) {
 					ParallaxUtilities.displayDevWarning(this, 'Header MUST have a height set.',
 						headerView,
 						anchoredRow, contentView);
 					return;
 				}
-				if (this._includesAnchored && isNaN(anchoredRow.height)) {
+				if (this._includesAnchored && isNaN(anchoredRow.height as number)) {
 					ParallaxUtilities.displayDevWarning(this, 'Anchor MUST have a height set.',
 						anchoredRow, headerView, contentView);
 					return;
 				}
-				maxTopViewHeight = headerView.height;
+				maxTopViewHeight = headerView.height as number;
 
 				if (this._includesAnchored) {
 					anchoredRow.translateY = maxTopViewHeight;
@@ -164,10 +172,11 @@ export class ParallaxView extends GridLayout {
 						anchoredRow.translateY = anchoredRow.translateY - 5; // get rid of white line that happens on android
 					}
 					//pushes content down a to compensate for anchor.
-					contentView.translateY = anchoredRow.height;
+					contentView.translateY = anchoredRow.height as number;
 				}
+
 				//disables bounce/overscroll defaulted to false
-				if (this.bounce === false) {
+				if (<any>this._bounce == "false" || this._bounce === false) {
 					if (app.ios) {
 						scrollView.ios.bounces = false;
 					} else if (app.android) {
@@ -183,12 +192,12 @@ export class ParallaxView extends GridLayout {
 					controlsToFade = this.controlsToFade.split(',');
 				}
 
-				controlsToFade.forEach((id: string): void => {
-					let newView: View = headerView.getViewById(id);
+				for (var c = 0; c < controlsToFade.length; c++) {
+					let newView: View = headerView.getViewById(controlsToFade[c]) as View;
 					if (newView != null) {
 						viewsToFade.push(newView);
 					}
-				});
+				};
 
 				let prevOffset = -10;
 				//set the min height on load
@@ -199,21 +208,54 @@ export class ParallaxView extends GridLayout {
 				});
 
 				scrollView.on(ScrollView.scrollEvent, (args: ScrollEventData) => {
+					this.notify({
+						eventName: ParallaxView.scrollEvent,
+						object: this,
+						data: args,
+						direction: (prevOffset > args.scrollY) ? "down" : "up"
+					});
+
 					if (this._includesAnchored) {
 						anchoredRow.translateY = ParallaxUtilities.getAnchoredTopHeight(maxTopViewHeight, scrollView.verticalOffset);
+
+						if (anchoredRow.translateY === 0) {
+							if (!this._isAnchored) {
+								this._isAnchored = true;
+								hasBeenAnchored = true;
+
+								this.notify({
+									eventName: ParallaxView.anchoredEvent,
+									object: this,
+									data: anchoredRow
+								});
+							}
+						} else if (anchoredRow.translateY > 0) {
+							if (hasBeenAnchored && this._isAnchored) {
+								this.notify({
+									eventName: ParallaxView.unanchoredEvent,
+									object: this,
+									data: anchoredRow
+								});
+							}
+
+							this._isAnchored = false;
+
+						}
+
 					}
 
 					headerView.height = ParallaxUtilities.getTopViewHeight(maxTopViewHeight, scrollView.verticalOffset);
 
-					//fades in and out label in topView
-					ParallaxUtilities.fadeViews(maxTopViewHeight, scrollView.verticalOffset, viewsToFade, this._topOpacity);
-
-					//leaving in the up/down detection as it may be handy in the future.
-					if (prevOffset <= scrollView.verticalOffset) {
-						//when scrolling down
-					} else {
-						//scrolling up,
+					if (headerView.height > 0) {
+						//fades in and out label in topView, but only if there is a header
+						ParallaxUtilities.fadeViews(maxTopViewHeight, scrollView.verticalOffset, viewsToFade, this._topOpacity);
 					}
+					//leaving in the up/down detection as it may be handy in the future.
+					//if (prevOffset <= scrollView.verticalOffset) {
+					//when scrolling down
+					//} else {
+					//scrolling up,
+					//}
 					prevOffset = scrollView.verticalOffset;
 				});
 			}

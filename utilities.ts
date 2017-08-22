@@ -1,14 +1,14 @@
 import * as app from 'application';
 import * as Platform from 'platform';
-import {ScrollView, ScrollEventData} from 'ui/scroll-view';
-import {GridLayout, ItemSpec, GridUnitType} from 'ui/layouts/grid-layout';
-import {AbsoluteLayout} from 'ui/layouts/absolute-layout';
-import {View, AddChildFromBuilder} from 'ui/core/view';
-import {Label} from 'ui/label';
+import { ScrollView, ScrollEventData } from 'ui/scroll-view';
+import { GridLayout, ItemSpec, GridUnitType } from 'ui/layouts/grid-layout';
+import { AbsoluteLayout } from 'ui/layouts/absolute-layout';
+import { View, AddChildFromBuilder } from 'ui/core/view';
+import { Label } from 'ui/label';
 import { ListView } from 'ui/list-view';
-import {StackLayout} from 'ui/layouts/stack-layout';
-import {Color} from 'color';
-import {ParallaxView, Header, Content, Anchored, IMinimumHeights } from './nativescript-parallax';
+import { StackLayout } from 'ui/layouts/stack-layout';
+import { Color } from 'color';
+import { ParallaxView, Header, Content, Anchored, IMinimumHeights } from './nativescript-parallax';
 import { SwipeDirection, GestureEventData, SwipeGestureEventData, PanGestureEventData } from 'ui/gestures';
 
 
@@ -16,7 +16,7 @@ export class ParallaxUtilities {
 
 	public static setMinimumHeight(contentView: Content, anchoredRow: AbsoluteLayout, minHeight: number, includesAnchored): void {
 		if (includesAnchored) {
-			minHeight = minHeight - (anchoredRow.height * 0.9); //0.9 is to give it a little bit extra space.
+			minHeight = minHeight - (anchoredRow.getMeasuredHeight() * 0.9); //0.9 is to give it a little bit extra space.
 		}
 		contentView.minHeight = minHeight;
 	}
@@ -61,9 +61,10 @@ export class ParallaxUtilities {
 			topOpacity = parseFloat((1 - (verticalOffset * 0.01)).toString());
 			if (topOpacity > 0 && topOpacity <= 1) {
 				//fade each control
-				viewsToFade.forEach((view: View): void => {
+				for (var v = 0; v < viewsToFade.length; v++) {
+					var view = viewsToFade[v];
 					view.opacity = topOpacity;
-				});
+				}
 			}
 		}
 	}
@@ -102,6 +103,7 @@ export class ParallaxUtilities {
 		warningText.textWrap = true;
 		warningText.translateY = 50;
 		parent.addChild(warningText);
+
 		viewsToCollapse.forEach((view: View) => {
 			if (view != null) {
 				view.visibility = 'collapse';
@@ -111,9 +113,11 @@ export class ParallaxUtilities {
 
 	public static pluckViews(parent: GridLayout): View[] {
 		let returnViews: View[] = [];
+
 		parent.eachLayoutChild((child: View) => {
 			returnViews.push(child);
 		});
+
 		parent.removeChildren();
 		return returnViews;
 	}

@@ -1,16 +1,16 @@
-#NativeScript Parallax View Plugin for Android & iOS.
+# NativeScript Parallax View Plugin for Android & iOS.
 
 [![npm](https://img.shields.io/npm/v/nativescript-parallax.svg)](https://www.npmjs.com/package/nativescript-parallax)
 [![npm](https://img.shields.io/npm/dt/nativescript-parallax.svg?label=npm%20downloads)](https://www.npmjs.com/package/nativescript-parallax)
 
-###Parallax Scroll
+### Parallax Scroll
 [![NativeScript Parallax Scroll Effect. Click to Play](https://img.youtube.com/vi/sR_Ku7dsm2c/0.jpg)](https://www.youtube.com/embed/sR_Ku7dsm2c)
-###Parallax Scroll with Anchor.
+### Parallax Scroll with Anchor.
 [![NativeScript Parallax Scroll Effect. Click to Play](https://img.youtube.com/vi/uQsZr7PyGSM/0.jpg)](https://www.youtube.com/embed/uQsZr7PyGSM)
-###Install
+### Install
 `$ tns plugin add nativescript-parallax`
 
-###Example xml useage
+### Example xml
 
 ```xml
 <Page xmlns="http://schemas.nativescript.org/tns.xsd"
@@ -34,7 +34,7 @@
 </Page>
 
 ```
-###Example css
+### Example css
 ```css
 #headerLabel2
 {
@@ -85,7 +85,13 @@ The ``<parallax:Anchored>`` has a property called `dropShadow` if set to true it
 If the inner content of ``<parallax:Content>`` isn't long enough to cause the page to scroll. If not it will not show the Parallax effect.
 
 As of version 1.1.0 the bounce/overscroll effect is disable by default to turn it back on set `bounce=true` on the ParallaxView element.
-###Plugin Development Work Flow.
+
+### Events
+* scroll: Happens on scroll
+* anchored: When the anchor hits
+* unanchored: When the anchor comes loose
+
+### Plugin Development Work Flow.
 
 * Clone repository to your machine.
 * First run `npm install`
@@ -94,11 +100,11 @@ As of version 1.1.0 the bounce/overscroll effect is disable by default to turn i
 * Run and deploy to your device or emulator with `npm run demo.android` or `npm run demo.ios`
 
 
-###Special thanks to:
+### Special thanks to:
  [Nathanael Anderson](https://github.com/NathanaelA) for helping with understand how plugins in {N} work.
  Also Thanks to [Nathan Walker](https://github.com/NathanWalker) for setting up the {N} plugin seed that I used to help get this plugin up and running. More info can be found about it here:
 https://github.com/NathanWalker/nativescript-plugin-seed
+Also maybe [Steve McNiven-Scott](https://github.com/sitefinitysteve) for optimizations, events and getting plugin working on v3+
 
-##License
-
+## License
 [MIT](/LICENSE)
