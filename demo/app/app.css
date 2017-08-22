@@ -1,12 +1,16 @@
-﻿#headerLabel2
+﻿ParallaxView{
+	margin-top: -20;
+}
+
+#headerLabel2
 {
-	font-size: 45;
+	font-size: 20;
 	horizontal-align: center;
-	margin-top:-25;
 	color:#B2EBF2;
+	margin-top: 20;
 }
 #headerLabel{
-	font-size: 25;
+	font-size: 40;
 	horizontal-align: center;
 	color:#B2EBF2;
 	margin-top: 20;
@@ -15,18 +19,30 @@
 	background-color:#212121;
 	background-image:url('~/images/mountains.png');
 	background-size: cover;
+	background-position: center center;
 	height: 200;
 }
-.body-template TextView{
+.body-template{
 	font-size:20;
-	padding:5 15;
-	border:none;
+	padding:15;
 }
 .anchor{
-	height: 55;
+	height: 70;
 	width:100%;
-	background-color:#616161;
+	background-color:#1770de;
 }
+
+.anchor Label{
+	vertical-align: center;
+}
+
+.header{
+	font-size: 25;
+	color: #a0a0a0;
+	margin-bottom: 20;
+	margin-top: 5;
+}
+
 #titleLabel{
 	font-weight:bold;
 	font-size:25;
