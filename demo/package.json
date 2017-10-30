@@ -5,12 +5,12 @@
       "version": "3.1.0"
     },
     "tns-android": {
-      "version": "3.1.1"
+      "version": "3.2.0"
     }
   },
   "dependencies": {
-    "nativescript-parallax": "file:///Users/steve/Dropbox/Projects/Plugins/nativescript-parallax",
-    "tns-core-modules": "^3.1.1"
+    "nativescript-parallax": "file:../",
+    "tns-core-modules": "^3.3.0"
   },
   "devDependencies": {
     "babel-traverse": "6.8.0",

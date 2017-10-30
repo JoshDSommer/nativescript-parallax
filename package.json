@@ -41,7 +41,7 @@
   "homepage": "https://github.com/TheOriginalJosh/nativescript-parallax",
   "readmeFilename": "README.md",
   "devDependencies": {
-    "typescript": "^1.8.9"
+    "typescript": "^2.5.3"
   },
   "dependencies": {}
 }
